@@ -2,16 +2,37 @@
 # yarn lockfile v1
 
 
+"@playwright/browser-chromium@^1.38.1":
+  version "1.38.1"
+  resolved "https://registry.npmjs.org/@playwright/browser-chromium/-/browser-chromium-1.38.1.tgz"
+  integrity sha512-HRhcBGtk1XaGAQjOben/04PNHxWAY3DBHT97egraR5lx5SQSLOREIiYu/j7WlvQBz4QJP+XL2JsvoxFBJfXmAw==
+  dependencies:
+    playwright-core "1.38.1"
+
+"@playwright/browser-firefox@^1.38.1":
+  version "1.38.1"
+  resolved "https://registry.npmjs.org/@playwright/browser-firefox/-/browser-firefox-1.38.1.tgz"
+  integrity sha512-Yj7XJ778YekwJ+h1tVtc4XBVRdVH7eP7LIpAix3ZvrZOF5RvzcDgt7IneiHGYMSQ0n/BjZBckFJHFr1ckfOCNw==
+  dependencies:
+    playwright-core "1.38.1"
+
+"@playwright/browser-webkit@^1.38.1":
+  version "1.38.1"
+  resolved "https://registry.npmjs.org/@playwright/browser-webkit/-/browser-webkit-1.38.1.tgz"
+  integrity sha512-XpXSag6qwm9Z7CRsl80jmQjJr8QRg8kHpQ9DYKgcodVPKb8M+rGpXDZKQFIsTf9sR/MJpnjpdKWfu2Q0D0aQaA==
+  dependencies:
+    playwright-core "1.38.1"
+
 "@playwright/test@^1.38.1":
   version "1.38.1"
-  resolved "https://registry.yarnpkg.com/@playwright/test/-/test-1.38.1.tgz#8ef4263e355cd1d8ad7905d471d268e8acb82ed6"
+  resolved "https://registry.npmjs.org/@playwright/test/-/test-1.38.1.tgz"
   integrity sha512-NqRp8XMwj3AK+zKLbZShl0r/9wKgzqI/527bkptKXomtuo+dOjU9NdMASQ8DNC9z9zLOMbG53T4eihYr3XR+BQ==
   dependencies:
     playwright "1.38.1"
 
 "@types/node@^20.8.2":
   version "20.8.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.8.2.tgz#d76fb80d87d0d8abfe334fc6d292e83e5524efc4"
+  resolved "https://registry.npmjs.org/@types/node/-/node-20.8.2.tgz"
   integrity sha512-Vvycsc9FQdwhxE3y3DzeIxuEJbWGDsnrxvMADzTDF/lcdR9/K+AQIeAghTQsHtotg/q0j3WEOYS/jQgSdWue3w==
 
 fsevents@2.3.2:
@@ -21,14 +42,19 @@ fsevents@2.3.2:
 
 playwright-core@1.38.1:
   version "1.38.1"
-  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.38.1.tgz#75a3c470aa9576b7d7c4e274de3d79977448ba08"
+  resolved "https://registry.npmjs.org/playwright-core/-/playwright-core-1.38.1.tgz"
   integrity sha512-tQqNFUKa3OfMf4b2jQ7aGLB8o9bS3bOY0yMEtldtC2+spf8QXG9zvXLTXUeRsoNuxEYMgLYR+NXfAa1rjKRcrg==
 
-playwright@1.38.1:
+playwright@1.38.1, playwright@^1.38.1:
   version "1.38.1"
-  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.38.1.tgz#82ecd9bc4f4f64dbeee8a11c31793748e2528130"
+  resolved "https://registry.npmjs.org/playwright/-/playwright-1.38.1.tgz"
   integrity sha512-oRMSJmZrOu1FP5iu3UrCx8JEFRIMxLDM0c/3o4bpzU5Tz97BypefWf7TuTNPWeCe279TPal5RtPPZ+9lW/Qkow==
   dependencies:
     playwright-core "1.38.1"
   optionalDependencies:
     fsevents "2.3.2"
+
+typescript@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-5.2.2.tgz"
+  integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==

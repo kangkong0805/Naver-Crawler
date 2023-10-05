@@ -4,8 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@playwright/browser-chromium": "^1.38.1",
+    "@playwright/browser-firefox": "^1.38.1",
+    "@playwright/browser-webkit": "^1.38.1",
     "@playwright/test": "^1.38.1",
     "@types/node": "^20.8.2"
   },
-  "scripts": {}
+  "scripts": {},
+  "dependencies": {
+    "playwright": "^1.38.1",
+    "typescript": "^5.2.2"
+  }
 }
