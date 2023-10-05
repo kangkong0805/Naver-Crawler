@@ -27,9 +27,9 @@ body:
     validations:
       required: true
   - type: textarea
-    id: screenshot
+    id: Reference
     attributes:
-      label: "Screenshots"
+      label: "Reference"
       description: 버그와 관련된 이미지/영상을 첨부
       render: bash
     validations:
@@ -54,7 +54,7 @@ body:
         - Microsoft Edge
         - Opera
     validations:
-      required: false
+      required: true
   - type: dropdown
     id: os
     attributes:
@@ -66,4 +66,4 @@ body:
         - Linux
         - Mac
     validations:
-      required: false
+      required: true

@@ -20,12 +20,4 @@ body:
       description: 개발 시작일을 입력해주세요
       placeholder: "month/day/year"
     validations:
-      required: false
-  - type: textarea
-    id: implementation_pr
-    attributes:
-      label: "Implementation PR"
-      description: 이 이슈와 연관된 pr을 입력해주세요
-      placeholder: "#1"
-    validations:
-      required: false
+      required: true
