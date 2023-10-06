@@ -2,8 +2,10 @@ import { devices, test } from '@playwright/test';
 
 test.use(devices['Desktop Chrome'])
 
-test('naver news crawling', async({page, context}) => {
-    await page.goto('https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=100')
+const newsPage = 'https://news.naver.com/main/main.naver?mode=LSD&mid=shm&sid1=100'
+
+test('naver news crawling', async({page}) => {
+    await page.goto(newsPage)
 
     const entries = await page.locator('.section_headline > ul > li').all()
 
@@ -21,4 +23,21 @@ test('naver news crawling', async({page, context}) => {
     await Promise.all(promise)
 
     console.log(list)
+})
+
+test('naver news detail crawling', async({page}) => {
+    await page.goto(newsPage)
+    await page.locator('.section_headline > ul > li >> nth=0 >> .sh_text > a').click()
+    
+    const title = await page.locator('#title_area > span')?.innerText()
+    const content = await page.locator('#newsct_article > *')?.innerText()
+    const company = await page.locator('.ra_title > em').first()?.innerText()
+    let images: any = await page.locator('#dic_area img').all()
+
+    images = await Promise.all(images.map(async (image) =>  {
+        return image.getAttribute('src')
+    }))
+    const news = {title, content, company, images}
+
+    console.log(news)
 })
