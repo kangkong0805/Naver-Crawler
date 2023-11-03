@@ -1,0 +1,44 @@
+import { JWT } from "google-auth-library";
+import { GoogleSpreadsheet } from "google-spreadsheet";
+import credential from "../../credential.json";
+
+const getGoogleSheet = async () => {
+  const createGoogleSheet = async () => {
+    const client = new JWT({
+      email: credential.client_email,
+      key: credential.private_key,
+      scopes: "https://www.googleapis.com/auth/spreadsheets",
+    });
+
+    const docId = "19hVQLMSzvf6fgWoGlsv_OkFSHL1V1pXllTLk3MsrTN0";
+    return new GoogleSpreadsheet(docId, client);
+  };
+  const doc = await createGoogleSheet();
+  return doc;
+};
+
+const loadGoogleSheet = async (title: string, header?: string[]) => {
+  const doc = await getGoogleSheet();
+
+  if (!doc) return console.log("구글 스프레드 시트 생성에서 막힘");
+  await doc.loadInfo();
+
+  let dataSheet = doc.sheetsByTitle[title];
+  const getHeaderRow = async () => {
+    try {
+      await dataSheet.loadHeaderRow();
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  if (!dataSheet)
+    dataSheet = await doc.addSheet({ title: title, headerValues: header });
+  if (!(await getHeaderRow()) && header) dataSheet.setHeaderRow(header);
+
+  await doc.loadInfo();
+  return dataSheet;
+};
+
+export default loadGoogleSheet;
