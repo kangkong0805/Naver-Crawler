@@ -1,9 +1,6 @@
-import test from "@playwright/test";
 import loadGoogleSheet from "../config/spreadsheet";
 
-test("떠나요", async ({ page }) => {
-  page.setDefaultTimeout(99999999);
-  test.setTimeout(99999999);
+export const ddnayo = async (page) => {
   const data = [];
   await page.goto(
     "https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=1&orderBy=recommend"
@@ -26,7 +23,7 @@ test("떠나요", async ({ page }) => {
     numberElement
   );
   const number = parseInt(numberText.replace(/,/g, ""), 10);
-  const pageNumber = parseInt(number / 24) + 1;
+  const pageNumber = number / 24 + 1;
 
   const responseHandler = async (url: string) => {
     const responsePromise = await page.waitForResponse(
@@ -34,12 +31,12 @@ test("떠나요", async ({ page }) => {
     );
     if (responsePromise.url().startsWith(url)) return responsePromise.json();
   };
+  await page.goBack({ waitUntil: "domcontentloaded" });
 
   for (let i = 1; i <= pageNumber; i++) {
     await page.waitForTimeout(1000);
     await page.goto(
-      `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`,
-      { waitUntil: "domcontentloaded" }
+      `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`
     );
     const pensionList = await responseHandler(
       "https://trip.ddnayo.com/web-api/regional"
@@ -100,4 +97,4 @@ test("떠나요", async ({ page }) => {
     if (dataSheetRowCount > 0) dataSheetRowCount -= links.length;
     if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
   }
-});
+};

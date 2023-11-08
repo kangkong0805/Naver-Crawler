@@ -1,9 +1,11 @@
-import test from "@playwright/test";
+import { chromium } from "playwright";
 import loadGoogleSheet from "../config/spreadsheet";
 
-test("떠나요", async ({ page }) => {
+(async () => {
+  const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
+  const context = await browser.newContext();
+  const page = await context.newPage();
   page.setDefaultTimeout(99999999);
-  test.setTimeout(99999999);
   const data = [];
   await page.goto(
     "https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=1&orderBy=recommend"
@@ -26,7 +28,7 @@ test("떠나요", async ({ page }) => {
     numberElement
   );
   const number = parseInt(numberText.replace(/,/g, ""), 10);
-  const pageNumber = parseInt(number / 24) + 1;
+  const pageNumber = number / 24 + 1;
 
   const responseHandler = async (url: string) => {
     const responsePromise = await page.waitForResponse(
@@ -100,4 +102,4 @@ test("떠나요", async ({ page }) => {
     if (dataSheetRowCount > 0) dataSheetRowCount -= links.length;
     if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
   }
-});
+})();
