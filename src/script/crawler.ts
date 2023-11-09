@@ -2,7 +2,7 @@ import { chromium } from "playwright";
 import { dailyHotel, ddnayo, yanolja, yeogieottae } from "./index";
 
 (async () => {
-  const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
+  const browser = await chromium.launch({ headless: true }); // Or 'firefox' or 'webkit'.
   const context = await browser.newContext();
 
   const crawler = async (ota) => {
