@@ -1,19 +1,21 @@
-import { chromium } from "playwright";
-import { dailyHotel, ddnayo, yanolja, yeogieottae } from "./index";
+import { Page, chromium } from "playwright";
+import { dailyHotel, ddnayo, yanolja, yeogieottae } from "../test/index";
 
-(async () => {
-  const browser = await chromium.launch({ headless: true }); // Or 'firefox' or 'webkit'.
+const crawling = async () => {
+  const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
 
-  const crawler = async (ota) => {
+  const otaCrawler = async <T>(func: (page: Page) => T) => {
     const page = await context.newPage();
     page.setDefaultTimeout(99999999);
     page.setDefaultNavigationTimeout(99999999);
-    ota(page);
+    func(page);
   };
 
-  crawler(dailyHotel);
-  crawler(yanolja);
-  crawler(yeogieottae);
-  crawler(ddnayo);
-})();
+  otaCrawler(dailyHotel);
+  otaCrawler(yanolja);
+  otaCrawler(yeogieottae);
+  otaCrawler(ddnayo);
+};
+
+export default crawling;

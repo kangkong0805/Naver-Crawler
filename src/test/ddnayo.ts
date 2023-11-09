@@ -1,11 +1,7 @@
-import { chromium } from "playwright";
+import { retry } from "../config/retry";
 import loadGoogleSheet from "../config/spreadsheet";
 
-(async () => {
-  const browser = await chromium.launch({ headless: false }); // Or 'firefox' or 'webkit'.
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  page.setDefaultTimeout(99999999);
+export const ddnayo = async (page) => {
   const data = [];
   await page.goto(
     "https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=1&orderBy=recommend"
@@ -39,14 +35,16 @@ import loadGoogleSheet from "../config/spreadsheet";
 
   for (let i = 1; i <= pageNumber; i++) {
     await page.waitForTimeout(1000);
-    await page.goto(
-      `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`,
-      { waitUntil: "domcontentloaded" }
-    );
-    const pensionList = await responseHandler(
-      "https://trip.ddnayo.com/web-api/regional"
-    );
-    const { contents } = pensionList.data;
+    let pensionList, contents;
+    await retry(async () => {
+      await page.goto(
+        `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`
+      );
+      pensionList = await responseHandler(
+        "https://trip.ddnayo.com/web-api/regional"
+      );
+      contents = pensionList.data.contents;
+    });
 
     await page.waitForTimeout(1000);
     const links = await page.$$eval(
@@ -102,4 +100,4 @@ import loadGoogleSheet from "../config/spreadsheet";
     if (dataSheetRowCount > 0) dataSheetRowCount -= links.length;
     if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
   }
-})();
+};

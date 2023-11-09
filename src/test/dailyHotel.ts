@@ -1,12 +1,7 @@
-import test from "@playwright/test";
-import loadGoogleSheet from "../../src/config/spreadsheet";
-import { SellerInfoProps } from "../../src/interface/sellerInfo";
+import loadGoogleSheet from "../config/spreadsheet";
+import { SellerInfoProps } from "../interface/sellerInfo";
 
-test("데일리호텔", async ({ page }) => {
-  page.setDefaultTimeout(99999999);
-  test.setTimeout(99999999);
-  console.clear();
-
+export const dailyHotel = async (page) => {
   const getTodayDate = () => {
     const date = new Date();
     const year = date.getFullYear();
@@ -159,4 +154,4 @@ test("데일리호텔", async ({ page }) => {
   } finally {
     page.unroute("**/**");
   }
-});
+};
