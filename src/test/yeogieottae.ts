@@ -1,6 +1,8 @@
 import loadGoogleSheet from "../config/spreadsheet";
 
 export const yeogieottae = async (page) => {
+  console.log("yeogieottae 크롤링 시작");
+
   const doc = await loadGoogleSheet("여기어때", [
     "업장ID",
     "업장명",

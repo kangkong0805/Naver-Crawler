@@ -2,6 +2,8 @@ import { retry } from "../config/retry";
 import loadGoogleSheet from "../config/spreadsheet";
 
 export const ddnayo = async (page) => {
+  console.log("ddnayo 크롤링 시작");
+
   const data = [];
   await page.goto(
     "https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=1&orderBy=recommend"

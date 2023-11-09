@@ -1,6 +1,8 @@
 import loadGoogleSheet from "../config/spreadsheet";
 
 export const yanolja = async (page) => {
+  console.log("yanolja 크롤링 시작");
+
   const dataSheet = await loadGoogleSheet("야놀자 test", [
     "업장ID",
     "업장명",

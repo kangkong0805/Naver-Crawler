@@ -2,6 +2,8 @@ import loadGoogleSheet from "../config/spreadsheet";
 import { SellerInfoProps } from "../interface/sellerInfo";
 
 export const dailyHotel = async (page) => {
+  console.log("dailyhotel 크롤링 시작");
+
   const getTodayDate = () => {
     const date = new Date();
     const year = date.getFullYear();
