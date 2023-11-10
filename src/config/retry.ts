@@ -1,4 +1,4 @@
-export const retry = async (func: () => void, retryCount = 3) => {
+export const retry = async (func: () => void, retryCount = 10) => {
   for (let i = 0; i < retryCount; i += 1) {
     try {
       return await func();
