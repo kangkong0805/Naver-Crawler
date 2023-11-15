@@ -1,7 +1,7 @@
-import mysql from "mysql2/promise";
+import { PoolConnection, createPool } from "mysql2/promise";
 
 // vendit용
-export const productDB = mysql.createPool({
+export const productDB = createPool({
   host: "13.125.72.99",
   user: "crawler",
   password: "kfasokfoaskovksfas241a@!asd",
@@ -9,14 +9,14 @@ export const productDB = mysql.createPool({
 });
 
 // test용
-export const testDB = mysql.createPool({
+export const testDB = createPool({
   host: "localhost",
   user: "root",
   password: "kangkong3095*",
   database: "vendit-crawler",
 });
 
-export const getDB = async (data: any[][]) => {
+export const getDB = async (data: (string | number)[][]) => {
   const connection = await productDB.getConnection();
   await connection.query("truncate accommodations");
   await connection.commit();
@@ -26,19 +26,35 @@ export const getDB = async (data: any[][]) => {
 };
 
 class SellerInfoDB {
-  db: 
+  dbType: 'live' | 'dev'
+  connection: PoolConnection
+  table: string
 
   constructor() {
+    this.dbType = 'live'
+    this.table = 'accommodations'
+  }
 
+  createDB = async () => {
+    this.connection = this.dbType === 'live' 
+    ? await productDB.getConnection() 
+    : await testDB.getConnection();
   }
 
   getDB = async () => {
-    const connection = await productDB.getConnection();
-    await connection.query("truncate accommodations");
-    await connection.commit();
+    this.connection = await productDB.getConnection();
+    await this.connection.query("truncate accommodations");
+    await this.connection.commit();
   };
 
-  setDB = async () => {
-    await connection.query("insert into accommodations values ?", [data]);
-  };
+  setTable = async (name: string) => {
+    this.table = name
+  }
+
+  insert = async (data: (string | number)[][]) => {
+    await this.connection.query(`insert into ${this.table} values ?`, [data]);
+  }
+  
 }
+
+export default SellerInfoDB
