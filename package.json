@@ -14,6 +14,7 @@
   "scripts": {},
   "dependencies": {
     "@types/google-spreadsheet": "^4.0.0",
+    "ci": "^2.3.0",
     "google-auth-library": "^9.1.0",
     "google-spreadsheet": "^4.1.0",
     "mysql": "^2.18.1",

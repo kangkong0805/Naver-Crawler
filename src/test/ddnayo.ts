@@ -8,17 +8,20 @@ export const ddnayo = async (page) => {
   await page.goto(
     "https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=1&orderBy=recommend"
   );
-  const dataSheet = await loadGoogleSheet("떠나요 test", [
+  const dataSheet = await loadGoogleSheet("떠나요", [
     "업장ID",
-    "업장명",
+    "name",
     "숙박타입",
     "행정구역",
-    "위치",
-    "판매자전화번호",
+    "address",
+    "phone",
     "판매자이름",
   ]);
   if (!dataSheet) return console.log("구글 스프레드 시트 못 가져옴");
-  let dataSheetRowCount = (await dataSheet.getRows()).length - 1;
+  const dataSheetRows = await dataSheet.getRows()
+  let dataSheetRowCount = dataSheetRows.length - 1;
+  const nameList = dataSheetRows.map((row) => row.get('판매자이름'))
+
 
   const numberElement = await page.$("span.jss120");
   const numberText = await page.evaluate(
@@ -83,6 +86,10 @@ export const ddnayo = async (page) => {
           continue;
         }
         const cleanedAddress = address.replace("지도 보기", "").trim();
+
+        const duplicateName = nameList.find((item) => {
+          return item === pensionInfo.repName;
+        });
         const obj = {
           id: contents[i].accommodationId,
           name: linkText,

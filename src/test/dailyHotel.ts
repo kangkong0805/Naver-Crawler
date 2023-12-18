@@ -26,7 +26,10 @@ export const dailyHotel = async (page) => {
       "판매자이메일",
     ]);
     if (!dataSheet) return;
-    const dataSheetRows = await dataSheet.getRows();
+  const dataSheetRows = await dataSheet.getRows();
+    const emailList: string[] = await dataSheetRows.map((row) => {
+      return row.get('판매자이메일')
+    })
     let dataSheetRowCount = dataSheetRows.length - 1; // 데이터들의 label이 있는 행은 제외합니다
 
     await page.goto("https://www.dailyhotel.com/", {
@@ -125,20 +128,26 @@ export const dailyHotel = async (page) => {
                 })
               ]?.value;
             };
+
             const sellerNumber = arr("사업자등록번호");
             const companyName = arr("상호명");
             const sellerName = arr("대표자");
             const sellerPhoneNumber = arr("전화번호");
             const sellerEmail = arr("전자우편번호");
-            dataList[j] = {
-              ...dataList[j],
-              sellerNumber,
-              companyName,
-              sellerName,
-              sellerPhoneNumber,
-              sellerEmail,
-            };
-            await dataSheet.addRow(Object.values(dataList[j]), { raw: true });
+            const duplicateEmail = emailList.find((item) => {
+              return item === sellerEmail;
+            });
+            if(!duplicateEmail) {
+              dataList[j] = {
+                ...dataList[j],
+                sellerNumber,
+                companyName,
+                sellerName,
+                sellerPhoneNumber,
+                sellerEmail,
+              };
+              await dataSheet.addRow(Object.values(dataList[j]), { raw: true });
+            }
           }
 
         if (dataSheetRowCount > 0) dataSheetRowCount -= dataList.length;

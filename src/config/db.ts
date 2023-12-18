@@ -30,26 +30,30 @@ class SellerInfoDB {
   connection: PoolConnection
   table: string
 
-  constructor() {
-    this.dbType = 'live'
+  constructor(
+    dbType: 'live' | 'dev'
+  ) {
+    this.dbType = dbType
     this.table = 'accommodations'
   }
 
-  createDB = async () => {
+  getDB = async () => {
     this.connection = this.dbType === 'live' 
     ? await productDB.getConnection() 
     : await testDB.getConnection();
+    return this.connection
   }
 
-  getDB = async () => {
-    this.connection = await productDB.getConnection();
-    await this.connection.query("truncate accommodations");
+  setDB = async () => {
+    await this.connection.query(`truncate ${this.dbType}`);
     await this.connection.commit();
   };
 
   setTable = async (name: string) => {
     this.table = name
   }
+  
+  getTable = () => this.table
 
   insert = async (data: (string | number)[][]) => {
     await this.connection.query(`insert into ${this.table} values ?`, [data]);
