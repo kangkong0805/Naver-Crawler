@@ -83,6 +83,15 @@ export const ddnayo = async (page) => {
           continue;
         }
         const cleanedAddress = address.replace("지도 보기", "").trim();
+
+        const duplicateName = nameList.find((item) => {
+          return item === pensionInfo.repName;
+        });
+
+        if(duplicateName === '떠나요') {
+          continue
+        }
+
         const obj = {
           id: contents[i].accommodationId,
           name: linkText,
