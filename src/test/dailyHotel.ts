@@ -14,7 +14,7 @@ export const dailyHotel = async (page: Page) => {
   };
 
   try {
-    const dataSheet = await loadGoogleSheet("데일리호텔", [
+    const dataSheet = await loadGoogleSheet("데일리호텔 test", [
       "업장ID",
       "업장명",
       "숙박타입",
