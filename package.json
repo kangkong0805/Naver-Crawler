@@ -24,6 +24,7 @@
     "playwright": "^1.39.0",
     "promise-mysql": "^5.2.0",
     "typescript": "^5.2.2",
+    "vercel": "^33.0.1",
     "xlsx": "^0.18.5"
   },
   "repository": "https://github.com/kangkong0805/Naver-Crawler.git",

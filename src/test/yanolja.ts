@@ -205,4 +205,5 @@ export const yanolja = async (page: Page) => {
       await choiceLocationBtn.click();
     }
   }
+  await page.close()
 };

@@ -156,5 +156,6 @@ export const dailyHotel = async (page: Page) => {
     return;
   } finally {
     page.unroute("**/**");
+    await page.close()
   }
 };

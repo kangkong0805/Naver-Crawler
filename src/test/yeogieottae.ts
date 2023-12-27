@@ -138,4 +138,5 @@ export const yeogieottae = async (page: Page) => {
       if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
     }
   }
+  await page.close()
 };
