@@ -23,9 +23,10 @@ export const ddnayo = async (page: Page) => {
 
   const numberElement = await page.$("span.jss120");
   const numberText = await page.evaluate(
-    (numberElement) => numberElement.textContent,
+    (numberElement) => numberElement?.textContent,
     numberElement
   );
+  if(!numberText) return
   const number = parseInt(numberText.replace(/,/g, ""), 10);
   const pageNumber = number / 24 + 1;
 
@@ -48,7 +49,7 @@ export const ddnayo = async (page: Page) => {
       );
       contents = pensionList.data.contents;
     });
-
+    if(!contents) return
     await page.waitForTimeout(1000);
     const links = await page.$$eval(
       "li.jss79 a div.jss83 div.jss85",
@@ -56,17 +57,18 @@ export const ddnayo = async (page: Page) => {
     );
     if (links.length > dataSheetRowCount)
       for (let i = dataSheetRowCount; i < links.length; i++) {
+        const {accommodationId} = contents[i]
         const linkText = links[i] ?? "";
         await page.click(`text=${linkText}`);
         const { data: pensionInfo } = await responseHandler(
-          `https://booking.ddnayo.com/booking-calendar-api/accommodation/${contents[i].accommodationId}`
+          `https://booking.ddnayo.com/booking-calendar-api/accommodation/${accommodationId }`
         );
         await page.waitForTimeout(1000);
         let address, phone;
         try {
           const addressElement = await page.$('dt:has-text("주소") + dd');
           address = await page.evaluate(
-            (element) => element.textContent,
+            (element) => element?.textContent,
             addressElement
           );
         } catch (error) {
@@ -76,17 +78,17 @@ export const ddnayo = async (page: Page) => {
         try {
           const phoneElement = await page.$('dt:has-text("연락처") + dd');
           phone = await page.evaluate(
-            (element) => element.textContent,
+            (element) => element?.textContent,
             phoneElement
           );
         } catch (error) {
           console.error("연락처를 가져오는 중 에러 발생:", error);
           continue;
         }
-        const cleanedAddress = address.replace("지도 보기", "").trim();
+        const cleanedAddress = address?.replace("지도 보기", "").trim();
 
         const obj = {
-          id: contents[i].accommodationId,
+          id: accommodationId,
           name: linkText,
           stayType: "펜션",
           largeLocation: pensionInfo.addr1,

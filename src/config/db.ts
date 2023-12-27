@@ -1,4 +1,4 @@
-import mysql from "mysql2/promise";
+import * as mysql from "mysql2/promise";
 
 // vendit용
 export const productDB = mysql.createPool({
@@ -25,20 +25,20 @@ export const getDB = async (data: any[][]) => {
   await connection.release();
 };
 
-class SellerInfoDB {
-  db: 
+// class SellerInfoDB {
+//   db: mysql.Pool | null
 
-  constructor() {
+//   constructor() {
+//     db: null
+//   }
 
-  }
+//   getDB = async () => {
+//     const connection = await productDB.getConnection();
+//     await connection.query("truncate accommodations");
+//     await connection.commit();
+//   };
 
-  getDB = async () => {
-    const connection = await productDB.getConnection();
-    await connection.query("truncate accommodations");
-    await connection.commit();
-  };
-
-  setDB = async () => {
-    await connection.query("insert into accommodations values ?", [data]);
-  };
-}
+//   setDB = async () => {
+//     await connection.query("insert into accommodations values ?", [data]);
+//   };
+// }

@@ -1,7 +1,8 @@
+import { Page, Route, Request } from "playwright";
 import loadGoogleSheet from "../config/spreadsheet";
 import { SellerInfoProps } from "../interface/sellerInfo";
 
-export const dailyHotel = async (page) => {
+export const dailyHotel = async (page: Page) => {
   console.log("dailyhotel 크롤링 시작");
 
   const getTodayDate = () => {
@@ -67,7 +68,7 @@ export const dailyHotel = async (page) => {
 
       for (let i = 1; i * 50 < hotelCount; i += 1) {
         await page.waitForLoadState("domcontentloaded");
-        const requestHandler = (route, request) => {
+        const requestHandler = (route: Route, request: Request) => {
           if (
             request
               .url()

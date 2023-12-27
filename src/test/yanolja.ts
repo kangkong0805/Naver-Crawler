@@ -1,6 +1,7 @@
+import { Page } from "playwright";
 import loadGoogleSheet from "../config/spreadsheet";
 
-export const yanolja = async (page) => {
+export const yanolja = async (page: Page) => {
   console.log("yanolja 크롤링 시작");
 
   const dataSheet = await loadGoogleSheet("야놀자 test", [
@@ -18,7 +19,7 @@ export const yanolja = async (page) => {
   const dataSheetRows = await dataSheet.getRows();
   let dataSheetRowCount = dataSheetRows.length;
   const accommodationList = ["hotel", "pension"];
-  const regex = (accommodation) => new RegExp(`\/${accommodation}\/(\\\d+)`);
+  const regex = (accommodation: string) => new RegExp(`\/${accommodation}\/(\\\d+)`);
   let data: object[] = [];
   let emailList: string[] = [];
 
@@ -76,8 +77,8 @@ export const yanolja = async (page) => {
         anchors.map((a) => a.getAttribute("href"))
       );
       const motelNumbers = links
-        .filter((link) => regex(accommodation).test(link)) // /motel/로 시작하는 링크만 필터링
-        .map((link) => link.match(regex(accommodation))[1]); // 숫자만 추출하여 새로운 배열 생성
+        .filter((link) => link && regex(accommodation).test(link)) // /motel/로 시작하는 링크만 필터링
+        .map((link: any) => {link.match(regex(accommodation))[1]}); // 숫자만 추출하여 새로운 배열 생성
 
       if (motelNumbers.length > dataSheetRowCount)
         for (let j = dataSheetRowCount; j < motelNumbers.length; j++) {

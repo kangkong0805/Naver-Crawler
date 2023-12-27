@@ -1,6 +1,7 @@
+import { Page } from "playwright";
 import loadGoogleSheet from "../config/spreadsheet";
 
-export const yeogieottae = async (page) => {
+export const yeogieottae = async (page: Page) => {
   console.log("yeogieottae 크롤링 시작");
 
   const doc = await loadGoogleSheet("여기어때", [
@@ -53,7 +54,9 @@ export const yeogieottae = async (page) => {
       console.log(links.length, dataSheetRowCount);
       if (items.length > dataSheetRowCount)
         for (let j = 0; j < items.length; j++) {
-          await page.goto(items[j], { waitUntil: "domcontentloaded" });
+          const link = items[j]
+          if(!link) continue;
+          await page.goto(link, { waitUntil: "domcontentloaded" });
           const currentUrl = new URL(page.url());
           const accommodationId = currentUrl.searchParams.get("ano") ?? "";
           const buttonSelector = "div.btn_center button";

@@ -12,7 +12,8 @@
     "ts-node": "^10.9.1"
   },
   "scripts": {
-    "start": "yarn ts-node src/app.ts"
+    "start": "node ./dist/src/app.js",
+    "build": "tsc -p ."
   },
   "dependencies": {
     "@types/google-spreadsheet": "^4.0.0",
