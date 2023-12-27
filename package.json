@@ -13,7 +13,8 @@
   },
   "scripts": {
     "start": "node ./dist/src/app.js",
-    "build": "tsc -p . && yarn playwright install"
+    "build": "tsc -p . && yarn playwright install",
+    "dev": "ts-node ./src/app.ts"
   },
   "dependencies": {
     "@types/google-spreadsheet": "^4.0.0",
