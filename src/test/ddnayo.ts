@@ -1,7 +1,8 @@
+import { Page } from "playwright";
 import { retry } from "../config/retry";
 import loadGoogleSheet from "../config/spreadsheet";
 
-export const ddnayo = async (page) => {
+export const ddnayo = async (page: Page) => {
   console.log("ddnayo 크롤링 시작");
 
   const data = [];
@@ -40,7 +41,7 @@ export const ddnayo = async (page) => {
     let pensionList, contents;
     await retry(async () => {
       await page.goto(
-        `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`
+        `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`,{waitUntil: 'networkidle'}
       );
       pensionList = await responseHandler(
         "https://trip.ddnayo.com/web-api/regional"
@@ -83,14 +84,6 @@ export const ddnayo = async (page) => {
           continue;
         }
         const cleanedAddress = address.replace("지도 보기", "").trim();
-
-        const duplicateName = nameList.find((item) => {
-          return item === pensionInfo.repName;
-        });
-
-        if(duplicateName === '떠나요') {
-          continue
-        }
 
         const obj = {
           id: contents[i].accommodationId,
