@@ -2,7 +2,6 @@ import { Page, chromium } from "playwright";
 import { dailyHotel, ddnayo, yanolja, yeogieottae } from "../test/index";
 
 const crawling = async () => {
-  console.log('test console')
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
 

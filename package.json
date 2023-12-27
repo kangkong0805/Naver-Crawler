@@ -24,6 +24,7 @@
     "mysql2": "^3.6.2",
     "playwright": "^1.39.0",
     "promise-mysql": "^5.2.0",
+    "serve": "^14.2.1",
     "typescript": "^5.2.2",
     "vercel": "^33.0.1",
     "xlsx": "^0.18.5"
