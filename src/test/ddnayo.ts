@@ -21,6 +21,13 @@ export const ddnayo = async (page: Page) => {
   if (!dataSheet) return console.log("구글 스프레드 시트 못 가져옴");
   let dataSheetRowCount = (await dataSheet.getRows()).length - 1;
 
+  
+    const screenShotPath = '/VenditLogs/';
+    
+    await page.screenshot({
+      path: `${screenShotPath} playwright_screenshot.png`,
+    });
+
   const numberElement = await page.$("span.jss120");
   const numberText = await page.evaluate(
     (numberElement) => numberElement?.textContent,
