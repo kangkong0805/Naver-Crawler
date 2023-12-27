@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "node ./dist/src/app.js",
-    "build": "tsc -p . && yarn playwright install",
+    "build": "tsc -p . && yarn playwright install && yarn start",
     "dev": "ts-node ./src/app.ts"
   },
   "dependencies": {
