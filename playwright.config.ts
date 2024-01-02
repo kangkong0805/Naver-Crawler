@@ -16,7 +16,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 10 : undefined,
+  retries: process.env.CI ? 2 : undefined,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 2 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -30,6 +30,7 @@ export default defineConfig({
 
     trace: "on-first-retry",
   },
+  timeout: 5 * 1000,
 
   // shard: { total: 3, current: 2 },
 
@@ -39,7 +40,6 @@ export default defineConfig({
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
       fullyParallel: true,
-      timeout: 99999999,
     },
 
     // {
