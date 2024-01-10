@@ -2,24 +2,26 @@ import { APIResponse, Page } from "playwright";
 import { retry } from "../config/retry";
 import loadGoogleSheet from "../config/spreadsheet";
 import { waitForRandomTimeout } from "../config/waitForRandomTimeout";
+import { sleep } from "../config/sleep";
 
 export const ddnayo = async (page: Page) => {
   console.log("ddnayo 크롤링 시작");
   try {
     const data = [];
-    const phoneList: string[] = [];
 
-    const dataSheet = await loadGoogleSheet("떠나요 test", [
+    const dataSheet = await loadGoogleSheet("떠나요", [
       "업장ID",
-      "업장명",
+      "name",
       "숙박타입",
       "행정구역",
-      "위치",
-      "판매자전화번호",
+      "address",
+      "phone",
       "판매자이름",
     ]);
     if (!dataSheet) return console.log("구글 스프레드 시트 못 가져옴");
-    let dataSheetRowCount = (await dataSheet.getRows()).length - 1;
+    const dataSheetRows = await dataSheet.getRows();
+    let dataSheetRowCount = dataSheetRows.length;
+    const phoneList: string[] = dataSheetRows.map((row) => row.get("phone"));
 
     await page.goto(
       "https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=1&orderBy=recommend"
@@ -68,6 +70,8 @@ export const ddnayo = async (page: Page) => {
       } = await req.json();
       if (!contents) return;
       for (const content of contents) {
+        console.log("ddnayo");
+
         await page.goto(content.productUrl);
 
         const { data: pensionInfo } = await responseHandler(
@@ -75,9 +79,9 @@ export const ddnayo = async (page: Page) => {
         );
 
         await page.waitForLoadState("domcontentloaded");
-        await page.waitForLoadState("networkidle");
 
         await waitForRandomTimeout(page);
+        await sleep(1000);
         let address, phone: string;
         try {
           const addressElement = await page.$('dt:has-text("주소") + dd');
@@ -105,8 +109,9 @@ export const ddnayo = async (page: Page) => {
         const duplicatePhone = phoneList.find(
           (_, idx) => phoneList[idx] === phone
         );
-        if (!duplicatePhone) continue;
-
+        if (duplicatePhone) {
+          continue;
+        }
         phoneList.push(phone);
 
         const obj = {
@@ -119,6 +124,7 @@ export const ddnayo = async (page: Page) => {
           sellerName: pensionInfo.repName,
         };
 
+        await sleep(500);
         dataSheet.addRow(Object.values(obj), { raw: true });
         data.push(obj);
 

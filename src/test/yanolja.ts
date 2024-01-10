@@ -23,11 +23,9 @@ export const yanolja = async (page: Page) => {
     const regex = (accommodation: string) =>
       new RegExp(`\/${accommodation}\/(\\\d+)`);
     let data: object[] = [];
-    let emailList: string[] = [];
-
-    emailList = dataSheetRows.map((row) => {
-      return row.get("판매자이메일");
-    });
+    const emailList: string[] = dataSheetRows.map((row) =>
+      row.get("판매자이메일")
+    );
 
     for (const accommodation of accommodationList) {
       await page.goto(`https://www.yanolja.com/sub-home/${accommodation}`);
@@ -82,122 +80,122 @@ export const yanolja = async (page: Page) => {
           .filter((link) => link && regex(accommodation).test(link)) // /motel/로 시작하는 링크만 필터링
           .map((link: any) => link.match(regex(accommodation))[1]); // 숫자만 추출하여 새로운 배열 생성
 
-        if (motelNumbers.length > dataSheetRowCount)
-          for (let j = dataSheetRowCount; j < motelNumbers.length; j++) {
-            let obj = {};
-            try {
-              await page.goto(
-                `https://place-site.yanolja.com/places/${motelNumbers[j]}`
-              );
+        for (let j = 0; j < motelNumbers.length; j++) {
+          console.log("yanolja");
 
-              const address = await page
-                .locator("div[class*=address]")
-                .innerText();
+          let obj = {};
+          try {
+            await page.goto(
+              `https://place-site.yanolja.com/places/${motelNumbers[j]}`
+            );
 
-              await page.waitForSelector('[data-swiper-slide-index="0"]');
-              await page.waitForSelector('[data-testid="back-button"]');
-              await page.getByText("판매자 정보").click();
+            const address = await page
+              .locator("div[class*=address]")
+              .innerText();
 
-              const nameElement = await page.waitForSelector(
-                '.tableTypeRow div:has-text("대표자명") + div > div',
-                { timeout: 5000 }
-              );
-              const name = await page.evaluate(
-                (element) => element.textContent ?? "",
-                nameElement
-              );
-              const companyNameElement = await page.waitForSelector(
-                '.tableTypeRow div:has-text("상호명") + div > div',
-                { timeout: 5000 }
-              );
-              const companyName = await page.evaluate(
-                (element) => element.textContent ?? "",
-                companyNameElement
-              );
-              const addressElement = await page.waitForSelector(
-                '.tableTypeRow div:has-text("사업자주소") + div > div',
-                { timeout: 5000 }
-              );
-              const emailElement = await page.waitForSelector(
-                '.tableTypeRow div:has-text("전자우편주소") + div > div',
-                { timeout: 5000 }
-              );
-              const email = await page.evaluate(
-                (element) => element.textContent ?? "",
-                emailElement
-              );
-              const phoneElement = await page.waitForSelector(
-                '.tableTypeRow div:has-text("연락처") + div > div',
-                { timeout: 5000 }
-              );
-              const phone = await page.evaluate(
-                (element) => element.textContent ?? "",
-                phoneElement
-              );
-              const registrationNumberElement = await page.waitForSelector(
-                '.tableTypeRow div:has-text("사업자등록번호") + div > div',
-                { timeout: 5000 }
-              );
-              const registrationNumber = await page.evaluate(
-                (element) => element.textContent ?? "",
-                registrationNumberElement
-              );
-              const getType = () => {
-                switch (accommodation) {
-                  case "motel":
-                    return "모텔";
-                  case "hotel":
-                    return "호텔";
-                  case "pension":
-                    return "펜션";
-                  case "guestHouse":
-                    return "게스트하우스";
-                  default:
-                    return "";
-                }
-              };
-              const duplicateEmail = emailList.find((item) => {
-                return item === email;
-              });
+            await page.waitForSelector('[data-swiper-slide-index="0"]');
+            await page.waitForSelector('[data-testid="back-button"]');
+            await page.getByText("판매자 정보").click();
 
-              if (!duplicateEmail) {
-                obj = {
-                  accommodationId: motelNumbers[j],
-                  name: companyName,
-                  type: getType(),
-                  largeLocation: locationText,
-                  address: address,
-                  companyNumber: registrationNumber,
-                  sellerName: name,
-                  sellerPhone: phone,
-                  sellerEmail: email,
-                };
-                data.push(obj);
-                dataSheet.addRow(Object.values(obj), { raw: true });
+            const nameElement = await page.waitForSelector(
+              '.tableTypeRow div:has-text("대표자명") + div > div',
+              { timeout: 5000 }
+            );
+            const name = await page.evaluate(
+              (element) => element.textContent ?? "",
+              nameElement
+            );
+            const companyNameElement = await page.waitForSelector(
+              '.tableTypeRow div:has-text("상호명") + div > div',
+              { timeout: 5000 }
+            );
+            const companyName = await page.evaluate(
+              (element) => element.textContent ?? "",
+              companyNameElement
+            );
+            const addressElement = await page.waitForSelector(
+              '.tableTypeRow div:has-text("사업자주소") + div > div',
+              { timeout: 5000 }
+            );
+            const emailElement = await page.waitForSelector(
+              '.tableTypeRow div:has-text("전자우편주소") + div > div',
+              { timeout: 5000 }
+            );
+            const email = await page.evaluate(
+              (element) => element.textContent ?? "",
+              emailElement
+            );
+            const phoneElement = await page.waitForSelector(
+              '.tableTypeRow div:has-text("연락처") + div > div',
+              { timeout: 5000 }
+            );
+            const phone = await page.evaluate(
+              (element) => element.textContent ?? "",
+              phoneElement
+            );
+            const registrationNumberElement = await page.waitForSelector(
+              '.tableTypeRow div:has-text("사업자등록번호") + div > div',
+              { timeout: 5000 }
+            );
+            const registrationNumber = await page.evaluate(
+              (element) => element.textContent ?? "",
+              registrationNumberElement
+            );
+            const getType = () => {
+              switch (accommodation) {
+                case "motel":
+                  return "모텔";
+                case "hotel":
+                  return "호텔";
+                case "pension":
+                  return "펜션";
+                case "guestHouse":
+                  return "게스트하우스";
+                default:
+                  return "";
               }
-
-              console.log(`${accommodation} 크롤링 진행 상황`);
-              console.log(
-                `${locationText}의 총 데이터: ${motelNumbers.length}`
-              );
-              console.log(
-                `${locationText}의 크롤링 진행률: ${
-                  ((j + 1) / motelNumbers.length) * 100
-                }%`
-              );
-              console.log(
-                `${locationText} 잔여 데이터: ${
-                  dataSheetRowCount === 0 ? 0 : motelNumbers.length - j - 1
-                }\n`
-              );
-
-              await page.goBack();
-            } catch (error) {
-              console.error(`오류 발생!!`, error);
-            } finally {
-              await page.waitForTimeout(Math.random() * 250 + 250);
+            };
+            const duplicateEmail = emailList.find((item) => {
+              return item === email;
+            });
+            if (duplicateEmail) {
+              continue;
             }
+
+            obj = {
+              accommodationId: motelNumbers[j],
+              name: companyName,
+              type: getType(),
+              largeLocation: locationText,
+              address: address,
+              companyNumber: registrationNumber,
+              sellerName: name,
+              sellerPhone: phone,
+              sellerEmail: email,
+            };
+            data.push(obj);
+            dataSheet.addRow(Object.values(obj), { raw: true });
+
+            console.log(`${accommodation} 크롤링 진행 상황`);
+            console.log(`${locationText}의 총 데이터: ${motelNumbers.length}`);
+            console.log(
+              `${locationText}의 크롤링 진행률: ${
+                ((j + 1) / motelNumbers.length) * 100
+              }%`
+            );
+            console.log(
+              `${locationText} 잔여 데이터: ${
+                dataSheetRowCount === 0 ? 0 : motelNumbers.length - j - 1
+              }\n`
+            );
+
+            await page.goBack();
+          } catch (error) {
+            console.error(`오류 발생!!`, error);
+          } finally {
+            await page.waitForTimeout(Math.random() * 250 + 250);
           }
+        }
         if (dataSheetRowCount > 0) dataSheetRowCount -= motelNumbers.length;
         if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
         await page.goto(accommodationListUrl, {

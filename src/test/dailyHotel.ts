@@ -4,7 +4,6 @@ import { SellerInfoProps } from "../interface/sellerInfo";
 
 export const dailyHotel = async (page: Page) => {
   console.log("dailyhotel 크롤링 시작");
-  const emailList: string[] = [];
 
   const getTodayDate = () => {
     const date = new Date();
@@ -29,6 +28,9 @@ export const dailyHotel = async (page: Page) => {
     ]);
     if (!dataSheet) return;
     const dataSheetRows = await dataSheet.getRows();
+    const emailList: string[] = dataSheetRows.map((row) =>
+      row.get("판매자이메일")
+    );
     let dataSheetRowCount = dataSheetRows.length; // 데이터들의 label이 있는 행은 제외합니다
 
     await page.goto("https://www.dailyhotel.com/", {
@@ -105,7 +107,9 @@ export const dailyHotel = async (page: Page) => {
           }
         );
         const hotelListPageUrl = page.url();
-        for (let j = dataSheetRowCount; j < dataList.length - 1; j += 1) {
+        for (let j = 0; j < dataList.length - 1; j += 1) {
+          console.log("dailyhotel");
+
           // 스프레드시트는 0행이 아닌 1행부터 시작합니다
           await page.waitForTimeout(Math.floor(Math.random() * 250) + 125);
           await page.goto(
@@ -132,7 +136,11 @@ export const dailyHotel = async (page: Page) => {
           const duplicateEmail = emailList.find(
             (email) => email === sellerEmail
           );
-          if (!duplicateEmail) continue;
+          if (duplicateEmail) {
+            continue;
+          }
+
+          emailList.push(sellerEmail);
 
           dataList[j] = {
             ...dataList[j],
@@ -143,7 +151,6 @@ export const dailyHotel = async (page: Page) => {
             sellerEmail,
           };
           await dataSheet.addRow(Object.values(dataList[j]), { raw: true });
-
           if (dataSheetRowCount > 0) dataSheetRowCount -= dataList.length;
           if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
 
