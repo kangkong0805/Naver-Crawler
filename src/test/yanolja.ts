@@ -19,7 +19,8 @@ export const yanolja = async (page: Page) => {
   const dataSheetRows = await dataSheet.getRows();
   let dataSheetRowCount = dataSheetRows.length;
   const accommodationList = ["hotel", "pension"];
-  const regex = (accommodation: string) => new RegExp(`\/${accommodation}\/(\\\d+)`);
+  const regex = (accommodation: string) =>
+    new RegExp(`\/${accommodation}\/(\\\d+)`);
   let data: object[] = [];
   let emailList: string[] = [];
 
@@ -73,12 +74,14 @@ export const yanolja = async (page: Page) => {
 
       await page.waitForLoadState();
 
-      const links = await page.$$eval("a", (anchors: HTMLAnchorElement[]) =>
-        anchors.map((a) => a.getAttribute("href"))
+      const links = await page.$$eval("a", (anchors: any) =>
+        anchors.map((a: any) => a.getAttribute("href"))
       );
       const motelNumbers = links
-        .filter((link) => link && regex(accommodation).test(link)) // /motel/로 시작하는 링크만 필터링
-        .map((link: any) => {link.match(regex(accommodation))[1]}); // 숫자만 추출하여 새로운 배열 생성
+        .filter((link: any) => link && regex(accommodation).test(link)) // /motel/로 시작하는 링크만 필터링
+        .map((link: any) => {
+          link.match(regex(accommodation))[1];
+        }); // 숫자만 추출하여 새로운 배열 생성
 
       if (motelNumbers.length > dataSheetRowCount)
         for (let j = dataSheetRowCount; j < motelNumbers.length; j++) {
@@ -205,5 +208,5 @@ export const yanolja = async (page: Page) => {
       await choiceLocationBtn.click();
     }
   }
-  await page.close()
+  await page.close();
 };

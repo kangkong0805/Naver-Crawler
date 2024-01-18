@@ -1,8 +1,9 @@
-import { Page, Request, Route } from "@playwright/test";
+import { Page, Request, Route, Response } from "playwright";
 
 const responseHandler = async (url: string, page: Page) => {
   const responsePromise = await page.waitForResponse(
-    (response) => response.url().startsWith(url) && response.status() === 200
+    (response: Response) =>
+      response.url().startsWith(url) && response.status() === 200
   );
   if (responsePromise.url().startsWith(url)) return responsePromise.json();
 };

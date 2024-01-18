@@ -21,19 +21,18 @@ export const ddnayo = async (page: Page) => {
   if (!dataSheet) return console.log("구글 스프레드 시트 못 가져옴");
   let dataSheetRowCount = (await dataSheet.getRows()).length - 1;
 
-  
-    const screenShotPath = '/VenditLogs/';
-    
-    await page.screenshot({
-      path: `${screenShotPath} playwright_screenshot.png`,
-    });
+  const screenShotPath = "/VenditLogs/";
+
+  await page.screenshot({
+    path: `${screenShotPath} playwright_screenshot.png`,
+  });
 
   const numberElement = await page.$("span.jss120");
   const numberText = await page.evaluate(
     (numberElement) => numberElement?.textContent,
     numberElement
   );
-  if(!numberText) return
+  if (!numberText) return;
   const number = parseInt(numberText.replace(/,/g, ""), 10);
   const pageNumber = number / 24 + 1;
 
@@ -49,14 +48,15 @@ export const ddnayo = async (page: Page) => {
     let pensionList, contents;
     await retry(async () => {
       await page.goto(
-        `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`,{waitUntil: 'networkidle'}
+        `https://trip.ddnayo.com/regional?area=0000&theme=&pageNumber=${i}&orderBy=recommend`,
+        { waitUntil: "networkidle" }
       );
       pensionList = await responseHandler(
         "https://trip.ddnayo.com/web-api/regional"
       );
       contents = pensionList.data.contents;
     });
-    if(!contents) return
+    if (!contents) return;
     await page.waitForTimeout(1000);
     const links = await page.$$eval(
       "li.jss79 a div.jss83 div.jss85",
@@ -64,11 +64,11 @@ export const ddnayo = async (page: Page) => {
     );
     if (links.length > dataSheetRowCount)
       for (let i = dataSheetRowCount; i < links.length; i++) {
-        const {accommodationId} = contents[i]
+        const { accommodationId } = contents[i];
         const linkText = links[i] ?? "";
         await page.click(`text=${linkText}`);
         const { data: pensionInfo } = await responseHandler(
-          `https://booking.ddnayo.com/booking-calendar-api/accommodation/${accommodationId }`
+          `https://booking.ddnayo.com/booking-calendar-api/accommodation/${accommodationId}`
         );
         await page.waitForTimeout(1000);
         let address, phone;
@@ -113,5 +113,5 @@ export const ddnayo = async (page: Page) => {
     if (dataSheetRowCount > 0) dataSheetRowCount -= links.length;
     if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
   }
-  await page.close()
+  await page.close();
 };

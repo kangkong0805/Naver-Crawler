@@ -36,7 +36,7 @@ export const yeogieottae = async (page: Page) => {
     "https://www.goodchoice.kr/product/search/5", // 캠핑, 글램핑
   ];
 
-  emailList = dataSheetRows.map((row) => {
+  emailList = dataSheetRows.map((row: any) => {
     return row.get("판매자이메일");
   });
 
@@ -54,8 +54,8 @@ export const yeogieottae = async (page: Page) => {
       console.log(links.length, dataSheetRowCount);
       if (items.length > dataSheetRowCount)
         for (let j = 0; j < items.length; j++) {
-          const link = items[j]
-          if(!link) continue;
+          const link = items[j];
+          if (!link) continue;
           await page.goto(link, { waitUntil: "domcontentloaded" });
           const currentUrl = new URL(page.url());
           const accommodationId = currentUrl.searchParams.get("ano") ?? "";
@@ -138,5 +138,5 @@ export const yeogieottae = async (page: Page) => {
       if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
     }
   }
-  await page.close()
+  await page.close();
 };

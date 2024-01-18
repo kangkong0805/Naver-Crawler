@@ -1,34 +1,52 @@
 {
-  "name": "crawler",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "devDependencies": {
-    "@playwright/browser-chromium": "^1.38.1",
-    "@playwright/browser-firefox": "^1.38.1",
-    "@playwright/browser-webkit": "^1.38.1",
-    "@playwright/test": "^1.39.0",
-    "@types/node": "^20.8.2",
-    "ts-node": "^10.9.1"
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/google-spreadsheet": "^4.0.0",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "google-auth-library": "^9.4.2",
+    "google-spreadsheet": "^4.1.1",
+    "mysql2": "^3.7.1",
+    "playwright": "^1.41.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "node ./dist/src/app.js",
-    "build": "tsc -p . && yarn playwright install && yarn start",
-    "dev": "ts-node ./src/app.ts"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "node dist/index.js && node dist/test/playwright-test.js"
   },
-  "dependencies": {
-    "@types/google-spreadsheet": "^4.0.0",
-    "google-auth-library": "^9.1.0",
-    "google-spreadsheet": "^4.1.0",
-    "mysql": "^2.18.1",
-    "mysql2": "^3.6.2",
-    "playwright": "^1.39.0",
-    "promise-mysql": "^5.2.0",
-    "serve": "^14.2.1",
-    "typescript": "^5.2.2",
-    "vercel": "^33.0.1",
-    "xlsx": "^0.18.5"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "repository": "https://github.com/kangkong0805/Naver-Crawler.git",
-  "author": "kangkong05 <kangkong@vendit.co.kr>"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {}
 }
