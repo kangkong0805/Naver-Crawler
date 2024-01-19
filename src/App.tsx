@@ -1,12 +1,22 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { chromium } from "./release/app/node_modules/playwright";
 
-function App() {
+const App: React.FC = () => {
+  const onClick = () => {
+    chromium.launch();
+  };
   return (
-    <>
-      <button>크롤러 실행</button>
-    </>
+    <div>
+      <h1>React with Playwright Example</h1>
+      <button
+        onClick={() => {
+          onClick();
+        }}
+      >
+        Google 검색
+      </button>
+    </div>
   );
-}
+};
+
 export default App;

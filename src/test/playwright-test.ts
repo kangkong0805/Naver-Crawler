@@ -1,31 +1,38 @@
-import { chromium, Browser, BrowserContext, Page } from "playwright";
-import crawling from "../script/crawler";
+import { chromium } from "../release/app/node_modules/playwright";
+
+if (typeof document !== "undefined") {
+  console.log("asdfsa");
+  document = document;
+  console.log(document);
+}
 
 const runTest = async () => {
-  // 브라우저 열기
-  const browser: Browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: false });
+  const context = await browser.newContext();
+  const page = await context.newPage();
 
-  // 새 컨텍스트 열기
-  const context: BrowserContext = await browser.newContext();
+  await page.goto("http://localhost:3000/");
 
-  // 새 페이지 열기
-  const page: Page = await context.newPage();
+  const go = async () => {
+    await page.goto("https://www.google.com");
 
-  // React 애플리케이션의 URL로 이동
-  await page.goto("http://localhost:3000");
+    await page.locator('input[name="q"]').fill("리액트");
 
+    await page.keyboard.press("Enter");
+
+    await page.screenshot({ path: "screenshot.png" });
+
+    await browser.close();
+  };
+  await page.waitForTimeout(3000);
   const button = page.locator("button");
-  await page.waitForTimeout(5000);
-  // 버튼을 찾아서 클릭
-  await page.click("button");
-  await crawling();
-
-  // 스크린샷 찍기
-  await page.screenshot({ path: "screenshot.png" });
-
-  console.log("테스트 성공: 스크린샷 찍음");
-  // 브라우저 닫기
-  await browser.close();
+  if (typeof document !== "undefined") {
+    document
+      .getElementsByTagName("button")[0]
+      .addEventListener("click", async (event) => {
+        await go();
+      });
+  }
 };
 
 runTest();

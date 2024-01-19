@@ -1,4 +1,4 @@
-import { Page } from "playwright";
+import { Page } from "../release/app/node_modules/playwright";
 import { retry } from "../config/retry";
 import loadGoogleSheet from "../config/spreadsheet";
 

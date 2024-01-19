@@ -1,4 +1,4 @@
-import { Page } from "playwright";
+import { Page } from "../release/app/node_modules/playwright";
 import loadGoogleSheet from "../config/spreadsheet";
 
 export const yeogieottae = async (page: Page) => {

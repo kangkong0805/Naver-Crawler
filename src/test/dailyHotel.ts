@@ -1,4 +1,4 @@
-import { Page, Route, Request } from "playwright";
+import { Page, Route, Request } from "../release/app/node_modules/playwright";
 import loadGoogleSheet from "../config/spreadsheet";
 import { SellerInfoProps } from "../interface/sellerInfo";
 
