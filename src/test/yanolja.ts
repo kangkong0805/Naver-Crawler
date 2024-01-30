@@ -2,8 +2,6 @@ import { Page } from "playwright";
 import loadGoogleSheet from "../config/spreadsheet";
 
 export const yanolja = async (page: Page) => {
-  console.log("yanolja 크롤링 시작");
-
   try {
     const dataSheet = await loadGoogleSheet("야놀자", [
       "업장ID",

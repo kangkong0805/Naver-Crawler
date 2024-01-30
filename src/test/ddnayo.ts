@@ -5,7 +5,6 @@ import { waitForRandomTimeout } from "../config/waitForRandomTimeout";
 import { sleep } from "../config/sleep";
 
 export const ddnayo = async (page: Page) => {
-  console.log("ddnayo 크롤링 시작");
   try {
     const data = [];
 
@@ -70,8 +69,6 @@ export const ddnayo = async (page: Page) => {
       } = await req.json();
       if (!contents) return;
       for (const content of contents) {
-        console.log("ddnayo");
-
         await page.goto(content.productUrl);
 
         const { data: pensionInfo } = await responseHandler(

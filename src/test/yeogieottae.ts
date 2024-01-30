@@ -4,7 +4,6 @@ import { waitForRandomTimeout } from "../config/waitForRandomTimeout";
 import { sleep } from "../config/sleep";
 
 export const yeogieottae = async (page: Page) => {
-  console.log("yeogieottae 크롤링 시작");
   try {
     const doc = await loadGoogleSheet("여기어때", [
       "업장ID",
@@ -59,8 +58,6 @@ export const yeogieottae = async (page: Page) => {
     for (const locale of localeList) {
       for (const roomTypeCode of roomTypeCodeList) {
         for (let pageIdx = 1; ; pageIdx++) {
-          console.log("yeogieottae");
-
           await page.goto(
             `https://www.yeogi.com/domestic-accommodations?keyword=${locale}&category=${roomTypeCode}&page=${pageIdx}&searchType=KEYWORD&freeForm=true`
           );

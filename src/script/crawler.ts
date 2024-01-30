@@ -7,13 +7,16 @@ const crawling = async () => {
   const otaCrawler = async <T>(func: (page: Page) => T) => {
     const context = await browser.newContext();
     const page = await context.newPage();
-    func(page);
+    await func(page);
   };
-
-  otaCrawler(dailyHotel);
-  otaCrawler(yanolja);
-  otaCrawler(yeogieottae);
-  otaCrawler(ddnayo);
+  while (true) {
+    await Promise.all([
+      otaCrawler(dailyHotel),
+      otaCrawler(yanolja),
+      otaCrawler(yeogieottae),
+      otaCrawler(ddnayo),
+    ]);
+  }
 };
 
 export default crawling;
