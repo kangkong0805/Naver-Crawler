@@ -3,8 +3,6 @@ import loadGoogleSheet from "../config/spreadsheet";
 import { SellerInfoProps } from "../interface/sellerInfo";
 
 export const dailyHotel = async (page: Page) => {
-  console.log("dailyhotel 크롤링 시작");
-
   const getTodayDate = () => {
     const date = new Date();
     const year = date.getFullYear();
@@ -14,7 +12,7 @@ export const dailyHotel = async (page: Page) => {
   };
 
   try {
-    const dataSheet = await loadGoogleSheet("데일리호텔 test", [
+    const dataSheet = await loadGoogleSheet("데일리호텔", [
       "업장ID",
       "업장명",
       "숙박타입",
@@ -28,8 +26,10 @@ export const dailyHotel = async (page: Page) => {
     ]);
     if (!dataSheet) return;
     const dataSheetRows = await dataSheet.getRows();
-    let dataSheetRowCount = dataSheetRows.length - 1; // 데이터들의 label이 있는 행은 제외합니다
-
+    const emailList: string[] = dataSheetRows.map((row) =>
+      row.get("판매자이메일")
+    );
+    let dataSheetRowCount = dataSheetRows.length; // 데이터들의 label이 있는 행은 제외합니다
     await page.goto("https://www.dailyhotel.com/", {
       waitUntil: "domcontentloaded",
     });
@@ -104,58 +104,64 @@ export const dailyHotel = async (page: Page) => {
           }
         );
         const hotelListPageUrl = page.url();
-        console.log(
-          `가공한 데이터 갯수: ${dataList.length}\n남은 스프레드시트의 데이터 갯수: ${dataSheetRowCount}`
-        );
-        if (dataList.length > dataSheetRowCount)
-          for (let j = dataSheetRowCount; j < dataList.length - 1; j += 1) {
-            // 스프레드시트는 0행이 아닌 1행부터 시작합니다
-            await page.waitForTimeout(Math.floor(Math.random() * 250) + 125);
-            await page.goto(
-              `https://www.dailyhotel.com/owner-attrs/${dataList[j].hotelId}/HOTEL`,
-              { waitUntil: "domcontentloaded", timeout: 50000 }
-            );
-            const sellerInfoRes = await responseHandler(
-              `https://www.dailyhotel.com/newdelhi/goodnight/api/v1/common/owner-attrs/${dataList[j].hotelId}/HOTEL`
-            );
-            const sellerInfoData: any[] = sellerInfoRes.data[0].values;
-            const arr = (label: string) => {
-              return sellerInfoData[
-                sellerInfoData.findIndex((item: any) => {
-                  if (item.label === label) return item.value;
-                })
-              ]?.value;
-            };
-            const sellerNumber = arr("사업자등록번호");
-            const companyName = arr("상호명");
-            const sellerName = arr("대표자");
-            const sellerPhoneNumber = arr("전화번호");
-            const sellerEmail = arr("전자우편번호");
-            dataList[j] = {
-              ...dataList[j],
-              sellerNumber,
-              companyName,
-              sellerName,
-              sellerPhoneNumber,
-              sellerEmail,
-            };
-            await dataSheet.addRow(Object.values(dataList[j]), { raw: true });
+        for (let j = 0; j < dataList.length - 1; j += 1) {
+          // 스프레드시트는 0행이 아닌 1행부터 시작합니다
+          await page.waitForTimeout(Math.floor(Math.random() * 250) + 125);
+          await page.goto(
+            `https://www.dailyhotel.com/owner-attrs/${dataList[j].hotelId}/HOTEL`,
+            { waitUntil: "domcontentloaded", timeout: 50000 }
+          );
+          const sellerInfoRes = await responseHandler(
+            `https://www.dailyhotel.com/newdelhi/goodnight/api/v1/common/owner-attrs/${dataList[j].hotelId}/HOTEL`
+          );
+          const sellerInfoData: any[] = sellerInfoRes.data[0].values;
+          const arr = (label: string) => {
+            return sellerInfoData[
+              sellerInfoData.findIndex((item: any) => {
+                if (item.label === label) return item.value;
+              })
+            ]?.value;
+          };
+          const sellerNumber = arr("사업자등록번호");
+          const companyName = arr("상호명");
+          const sellerName = arr("대표자");
+          const sellerPhoneNumber = arr("전화번호");
+          const sellerEmail = arr("전자우편번호");
+
+          const duplicateEmail = emailList.find(
+            (email) => email === sellerEmail
+          );
+          if (duplicateEmail) {
+            continue;
           }
 
-        if (dataSheetRowCount > 0) dataSheetRowCount -= dataList.length;
-        if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
+          emailList.push(sellerEmail);
 
-        totalDataList = totalDataList.concat(dataList);
-        await page.goto(hotelListPageUrl);
+          dataList[j] = {
+            ...dataList[j],
+            sellerNumber,
+            companyName,
+            sellerName,
+            sellerPhoneNumber,
+            sellerEmail,
+          };
+          await dataSheet.addRow(Object.values(dataList[j]), { raw: true });
+          if (dataSheetRowCount > 0) dataSheetRowCount -= dataList.length;
+          if (dataSheetRowCount <= 0) dataSheetRowCount = 0;
+
+          totalDataList = totalDataList.concat(dataList);
+          await page.goto(hotelListPageUrl);
+        }
       }
     }
     await page.waitForTimeout(1000);
     await page.goto("https://www.dailyhotel.com/");
   } catch (e) {
-    console.error(e);
-    return;
+    console.log("---dailyHotel---");
+    console.log(e);
+    console.log("----------------");
   } finally {
-    page.unroute("**/**");
-    await page.close()
+    page.unroute("**/*");
+    await page.close();
   }
 };
