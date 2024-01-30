@@ -20,8 +20,8 @@
     "webpack-dev-server": "^4.15.1"
   },
   "scripts": {
-    "start": "yarn set && pm2 start ecosystem.config.js --only ota_crawler",
-    "set": "yarn install && yarn playwright install",
+    "start": "pm2 start ecosystem.config.js --only ota_crawler",
+    "build": "yarn install && yarn playwright install",
     "stop": "pm2 delete ota_crawler",
     "dev": "ts-node ./src/app.ts"
   },
